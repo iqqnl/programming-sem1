@@ -19,14 +19,18 @@ bool isInTriangle(double x, double y) {
 }
 
 int main() {
+    cout << "Введите 0 0 , чтобы завершить ввод" << endl;
+    setlocale(LC_ALL, "ru_RU");
     double x = 1, y = 1;
-
+    cout << "Введите координаты" << endl;
     cin >> x >> y;
     while (x != 0 || y != 0) {
         if (isInTriangle(x, y)) {
             cout << "YES" << endl;
+            cout << "Точка входит" << endl;
         } else {
             cout << "NO" << endl;
+            cout << "Точка не входит " << endl;
         }
 
         cin >> x >> y;
