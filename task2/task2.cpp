@@ -43,11 +43,12 @@ int main(int argc, char* argv[]) {
         sum += num; 
         if (num > maxNum) maxNum = num; 
         if (num < minNum) minNum = num; 
- 
-        if (isHuman && isPrime(num)) { 
-            cout << num << " Является простым числом." << endl; 
-        } 
- 
+        if(isPrime(num)){
+            cout << num;
+            if (isHuman) { 
+                cout << " Является простым числом" << endl; 
+            } 
+        }
         if (num % 5 == 0) ++divisibleByFive; 
         if (isPowerOfTwo(num)) ++powerOfTwoCount; 
         if (i >= 2 && num > prev1 + prev2) ++exceedsPrevSum; 
