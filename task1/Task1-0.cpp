@@ -1,5 +1,7 @@
 #include <iostream> 
 #include <cstring> 
+#include <Windows.h>
+
 using namespace std; 
  
 const double xa = 0, xb = 3, xc = 0; 
@@ -21,9 +23,11 @@ bool isInTriangle(double x, double y) {
  
 int main(int argc, char* argv[]) 
 { 
-    setlocale(LC_ALL, "ru_RU"); 
- bool isHuman = false; 
- if (argc <= 1 || strcmp(argv[1], "false") != 0) isHuman = true; 
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
+
+    bool isHuman = false; 
+    if (argc <= 1 || strcmp(argv[1], "false") != 0) isHuman = true; 
     if(isHuman) cout << "Введите 0 0 , чтобы завершить ввод" << endl; 
      
     double x = 1, y = 1; 

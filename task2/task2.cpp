@@ -44,7 +44,7 @@ int main(int argc, char* argv[]) {
         if (num > maxNum) maxNum = num; 
         if (num < minNum) minNum = num; 
         if(isPrime(num)){
-            cout << num;
+            cout << num << endl;
             if (isHuman) { 
                 cout << " Является простым числом" << endl; 
             } 
