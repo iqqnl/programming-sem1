@@ -19,6 +19,8 @@ bool isPowerOfTwo(int num) {
 } 
  
 int main(int argc, char* argv[]) { 
+    setlocale(LC_ALL, "ru_RU");
+
     bool isHuman = false; 
     if (argc <= 1 || strcmp(argv[1], "false") != 0) { 
         isHuman = true; 
