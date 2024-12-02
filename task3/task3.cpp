@@ -28,9 +28,13 @@ bool DeegreeOfTwo(int digit)
 	return (digit == initValue) ? true : false;
 }
 
-int main()
-{
-	setlocale(LC_ALL, "RUS");
+int main(int argc, char* argv[]) {
+    bool isHuman = false;
+    if (argc <= 1 || strcmp(argv[1], "false") != 0) {
+        isHuman = true;
+    }
+
+    setlocale(LC_ALL, "RUS");
 
 	const int SIZE = 30;
 	float arr1[SIZE]{}, arr2[SIZE]{};
