@@ -1,269 +1,161 @@
 #include <iostream>
-#include <cmath>
-
 using namespace std;
 
-void sortBuble(float* ar, int size) {
-	bool f{};
-	for (int i = 0; i < size - 1; i++)
-	{
-		f = false;
-		for (int j = size - 1; j > i; j--)
-		{
-			if (ar[j] < ar[j - 1])
-			{
-				std::swap(ar[j], ar[j - 1]);
-				f = true;
-			}
+void deleteMatrix(int** array, int numberOfRows) {
+    if (array == nullptr) {
+        return;
+    }
+
+	for (int i = 0; i < numberOfRows; i++) {
+		delete array[i];
+	}
+	delete array;
+}
+
+int** createMatrix(int numberOfRows, int numberOfColumns) {
+    int** result = new int*[numberOfRows];
+    for (int i = 0; i < numberOfRows; i++) {
+        result[i] = new int[numberOfColumns];
+    }
+    return result;
+}
+
+void printMatrix(int** array, int numberOfRows, int numberOfColums) {
+    if (array == nullptr) {
+        return;
+    }
+
+	for (int i = 0; i < numberOfRows; i++)  {
+		for (int j = 0; j < numberOfColums; j++) {
+			cout << array[i][j] << " ";
 		}
-		if (!f) return;
+		cout << endl;
 	}
 }
 
-bool DeegreeOfTwo(int digit)
-{
-	int initValue = 1 ;
-	while (initValue < digit)
-		initValue *= 2;
-	return (digit == initValue) ? true : false;
+int** readMatrix(int numberOfRows, int numberOfColums) {
+	int** array = createMatrix(numberOfRows, numberOfColums);
+
+	for (int i = 0; i < numberOfRows; i++)  {
+		for (int j = 0; j < numberOfColums; j++) {
+			cin >> array[i][j];
+		}
+	}
+
+	return array;
 }
 
-int main()
-{
-	setlocale(LC_ALL, "RUS");
+int multiplyRowByColumn(int* row, int** columnOwner, int columnNumber, int rowLength) {
+    int result = 0;
 
-	const int SIZE = 30;
-	float arr1[SIZE]{}, arr2[SIZE]{};
-	float x1{}, x2{}, intermediateX{};
-	float a{}, b{}, c{};
-	cout << "Введите X1: ";
-	cin >> x1;
-	cout << "Введите X2: ";
-	cin >> x2;
-	cout << "Введите a: ";
-	cin >> a;
-	cout << "Введите b: ";
-	cin >> b;
-	cout << "Введите c: ";
-	cin >> c;
+    for (int i = 0; i < rowLength; i++) {
+        result += row[i] * columnOwner[i][columnNumber];
+    }
 
-	if (x1 > x2) swap(x1, x2);
+    return result;
+}
 
-	float step = (x2 - x1) / 14;
-	intermediateX = x1;
+int** multipMatrix(int** M1, int M1_numberOfRows, int M1_numberOfColums, int** M2, int M2_numberOfColums) {
+    int** result = createMatrix(M1_numberOfRows, M2_numberOfColums);
 
-	// правда - тип int
-	// ложь - тип float
-	bool f{};
-	f = (((int(a) | int(b)) & (int(a) | int(c))) == 0) ? true : f = false;
+    for (int i = 0; i < M1_numberOfRows; i++)
+    {
+        for (int j = 0; j < M2_numberOfColums; j++)
+        {
+            result[i][j] = multiplyRowByColumn(M1[i], M2, j, M1_numberOfColums);
+        }
+    }
 
-	float F{};
+    return result;
+}
 
-	int k = 0;
-	while (intermediateX <= x2)
-	{
-		if (intermediateX < 0 && b != 0)
-			F = a * intermediateX * intermediateX + b;
-		else if (intermediateX > 0 && b == 0)
-			F = (intermediateX - a) / (intermediateX - c);
-		else
-			F = intermediateX / c;
+int readInt(char* message) {
+    int number;
 
-		arr1[k] = F;
+    if (message != nullptr) {
+        cout << message;
+    }
+    cin >> number;
 
-		intermediateX += step;
-		k++;
-	}
+    return number;
+}
 
+void reassignMatrix(int*** reassignTarget, int** matrixToReassign, int targetRowsNum) {
+    deleteMatrix(*reassignTarget, targetRowsNum);
+    *reassignTarget = matrixToReassign;
+}
 
-	k = 0;
-	intermediateX = x2 * (-1);
-	while (intermediateX <= x1 * (-1))
-	{
-		if (intermediateX < 0 && b != 0)
-			F = a * intermediateX * intermediateX + b;
-		else if (intermediateX > 0 && b == 0)
-			F = (intermediateX - a) / (intermediateX - c);
-		else
-			F = intermediateX / c;
+int main(int argc, char* argv[]) {
+    setlocale(LC_ALL, "ru_RU");
 
-		arr2[k] = F;
+    bool isHuman = false;
+    if (argc <= 1 || strcmp(argv[1], "false") != 0) {
+        isHuman = true;
+    }
 
-		intermediateX += step;
-		k++;
-	}
+    int N = readInt(isHuman ? "Введитн N (число строк): " : nullptr);
+    int M = readInt(isHuman ? "Введитн M (число столбцов): " : nullptr);
 
+	int** A1 = readMatrix(N, M);
 
-	for (int i = 0; i < SIZE / 2; i++)
-	{
-		if (f)
-			cout << int(arr1[i]) << ' ';
-		else
-		{
-			arr1[i] = round(arr1[i] * 100.0) / 100.0;
-			cout << arr1[i] << ' ';
-		}
-	}
-	cout << endl;
+    int **A2 = nullptr, **multiplicationResult = nullptr,
+        **previousPower = nullptr, **currentPower = nullptr;
+    int K = 0, x = 0;
+    while (true) {
+        int comm = readInt(isHuman ? "Введите номер команды 0, 1, 2, 3: " : nullptr);
+        switch (comm) {
+            case 0:
+                deleteMatrix(A1, N);
+                return 0;
+            case 1:
+                if (isHuman) 
+                {
+                    cout << "Матрица А1 " << endl;
+                }
+                
+                printMatrix(A1, N, M);
+                break;
+            case 2:
+                K = readInt(isHuman ? "Введите число К: " : nullptr);
+                if (N != K) {
+                    // cout << "NO" << endl;
+                    break;
+                }
 
-	for (int i = 0; i < SIZE / 2; i++)
-	{
-		if (f)
-			cout << int(arr2[i]) << ' ';
-		else
-		{
-			arr2[i] = round(arr2[i] * 100.0) / 100.0;
-			cout << arr2[i] << ' ';
-		}
-	}
-	cout << endl;
+                A2 = readMatrix(M, K);
+                multiplicationResult = multipMatrix(A1, N, M, A2, K);
 
-	for (int i = 0 ; i < 3; ++i)
-	{
-		float min = 99999999.0;
-		for (int j = 0; j < 5; j++)
-		{
-			if (arr1[i * 5 + j] < min)
-			{
-				min = arr1[i * 5 + j];
-			}
-		}
-		cout << "Минимум для " << i + 1 << " пятёрки = " << min << endl;
-	}
+                reassignMatrix(&A1, multiplicationResult, N);
+                M = K;
+                printMatrix(A1, N, M);
 
-	cout << "Отсортированный массив: ";
-	sortBuble(arr1, SIZE / 2);
-	for (int i = 0; i < SIZE / 2; i++)
-	{
-		cout << arr1[i] << ' ';
-	}
-	cout << endl;
+                deleteMatrix(A2, M);
+                break;
+            case 3:
+                if (N != M) {
+                    cout << "NO" << endl;
+                    break;
+                }
 
+                x = readInt(isHuman ? "Введите число x: " : nullptr);
 
-	int countRepeatedNumbers{};
-	for (int i = 1 ; i < SIZE / 2 - 1; i++)
-	{
-		if (arr1[i] == arr1[i - 1] && arr1[i] != arr1[i + 1])
-		{
-			countRepeatedNumbers++;
-		}
-	}
+                previousPower = nullptr;
+                currentPower = A1;
+                for (int i = 0; x > 1 && i < x - 1; i++) {
+                    previousPower = currentPower;
+                    currentPower = multipMatrix(A1, N, M, previousPower, M);
+                    if (i > 0) {
+                        deleteMatrix(previousPower, N);
+                    }
+                }
+                reassignMatrix(&A1, currentPower, N);
+                printMatrix(A1, N, M);
 
-	if (countRepeatedNumbers == 0 && arr1[0] == arr1[1])
-		countRepeatedNumbers++;
-
-	cout << endl;
-	cout << "Количество повторяющих чисел в массиве = " << countRepeatedNumbers << endl;
-
-
-
-	bool flag = false, flag2 = false;
-	for (int i = 0 ; i < SIZE / 2 - 1; ++i)
-	{
-		if (DeegreeOfTwo(arr1[i]) && DeegreeOfTwo(arr1[i + 1]) && arr1[i] * 2 == arr1[i + 1])
-		{
-			for (int j = i + 1; j < SIZE / 2 - 1; ++j)
-			{
-				if (DeegreeOfTwo(arr1[j]) == false)
-				{
-					flag = false;
-					break;
-				}
-			}
-			if (flag)
-			{
-				cout << "Степень двойки начинается с " << i << " элемента" << endl;
-				flag2 = true;
-				break;
-			}
-		}
-	}
-	if (!flag)
-	{
-		cout << "В данном массиве нет степеней двойки " << -1 << endl;
-	}
-
-
-
-	k = 15;
-	for (int i = 0 ; i < 15; i++)
-	{
-		if (arr1[i] > 0)
-		{
-			arr2[k] = arr1[i];
-			arr1[i] = 0;
-			k++;
-		}
-	}
-
-	k = 15;
-	for (int i = 0; i < 15; i++)
-	{
-		if (arr2[i] < 0)
-		{
-			arr1[k] = arr2[i];
-			arr2[i] = 0;
-			k++;
-		}
-	}
-
-	for (int i = 0; i < SIZE; ++i)
-	{
-		if (arr1[i] == 0)
-		{
-			for (int j = i + 1 ; j < SIZE; ++j)
-			{
-				if (arr1[j] != 0)
-				{
-					arr1[i] = arr1[j];
-					arr1[j] = 0;
-					break;
-				}
-			}
-		}
-	}
-
-	for (int i = 0 ; i < SIZE; ++i)
-	{
-		if (arr2[i] == 0)
-		{
-			for (int j = 29 ; j > i; --j)
-			{
-				if (arr2[j] != 0)
-				{
-					arr2[i] = arr2[j];
-					arr2[j] = 0;
-					break;
-				}
-			}
-		}
-	}
-
-	for (int i = 0 ; i < SIZE; i++)
-	{
-		if (arr1[i] != 0)
-		{
-			cout << arr1[i];
-			if (i != SIZE - 1)
-			{
-				cout << ' ';
-			}
-		}
-	}
-	cout << endl;
-
-	for (int i = 0; i < SIZE; i++)
-	{
-		if (arr2[i] != 0)
-		{
-			cout << arr2[i];
-			if (i != SIZE - 1)
-			{
-				cout << ' ';
-			}
-		}
-	}
-	cout << endl;
+                break;
+            default:
+                cout << "Введите допустимую команду." << endl;
+        }
+    }
 
 	return 0;
 }
