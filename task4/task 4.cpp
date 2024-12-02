@@ -69,7 +69,7 @@ int** multipMatrix(int** M1, int M1_numberOfRows, int M1_numberOfColums, int** M
     return result;
 }
 
-int readInt(char* message) {
+int readInt(const char* message) {
     int number;
 
     if (message != nullptr) {
