@@ -118,7 +118,6 @@ int main(int argc, char* argv[]) {
             case 2:
                 K = readInt(isHuman ? "Введите число К: " : nullptr);
                 if (N != K) {
-                    // cout << "NO" << endl;
                     break;
                 }
 
