@@ -85,7 +85,7 @@ int** exponentiation(int** A1, int N,  int x) {
     return currentPower;
 }
 
-int readInt(char* message) {
+int readInt(const char* message) {
     int number;
 
     if (message != nullptr) {
