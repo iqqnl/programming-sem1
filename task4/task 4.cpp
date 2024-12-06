@@ -26,10 +26,10 @@ void printMatrix(int** array, int numberOfRows, int numberOfColums) {
     }
 
 	for (int i = 0; i < numberOfRows; i++)  {
-		for (int j = 0; j < numberOfColums - 1; j++) {
+		for (int j = 0; j < numberOfColums; j++) {
 			cout << array[i][j] << " ";
 		}
-		cout << array[i][numberOfColums - 1] << endl;
+		cout << endl;
 	}
 }
 
@@ -69,7 +69,23 @@ int** multipMatrix(int** M1, int M1_numberOfRows, int M1_numberOfColums, int** M
     return result;
 }
 
-int readInt(const char* message) {
+int** exponentiation(int** A1, int N,  int x) {
+    int** previousPower = nullptr;
+    int** currentPower = A1;
+    
+    for (int i = 0; x > 1 && i < x - 1; i++) {
+        previousPower = currentPower;
+        currentPower = multipMatrix(A1, N, N, previousPower, N);
+
+        if (i > 0) {
+            deleteMatrix(previousPower, N);
+        }
+    }
+
+    return currentPower;
+}
+
+int readInt(char* message) {
     int number;
 
     if (message != nullptr) {
@@ -86,20 +102,17 @@ void reassignMatrix(int*** reassignTarget, int** matrixToReassign, int targetRow
 }
 
 int main(int argc, char* argv[]) {
-    setlocale(LC_ALL, "ru_RU");
-
     bool isHuman = false;
     if (argc <= 1 || strcmp(argv[1], "false") != 0) {
-        isHuman = true;
-    }
+    isHuman = true;
+	}
 
     int N = readInt(isHuman ? "Введитн N (число строк): " : nullptr);
     int M = readInt(isHuman ? "Введитн M (число столбцов): " : nullptr);
 
 	int** A1 = readMatrix(N, M);
 
-    int **A2 = nullptr, **multiplicationResult = nullptr,
-        **previousPower = nullptr, **currentPower = nullptr;
+    int **A2 = nullptr, **multiplicationResult = nullptr, **poweredMatrix = nullptr;
     int K = 0, x = 0;
     while (true) {
         int comm = readInt(isHuman ? "Введите номер команды 0, 1, 2, 3: " : nullptr);
@@ -126,8 +139,7 @@ int main(int argc, char* argv[]) {
 
                 reassignMatrix(&A1, multiplicationResult, N);
                 M = K;
-                
-                deleteMatrix(A2, M);
+
                 break;
             case 3:
                 if (N != M) {
@@ -137,17 +149,10 @@ int main(int argc, char* argv[]) {
 
                 x = readInt(isHuman ? "Введите число x: " : nullptr);
 
-                previousPower = nullptr;
-                currentPower = A1;
-                for (int i = 0; x > 1 && i < x - 1; i++) {
-                    previousPower = currentPower;
-                    currentPower = multipMatrix(A1, N, M, previousPower, M);
-                    if (i > 0) {
-                        deleteMatrix(previousPower, N);
-                    }
-                }
-                reassignMatrix(&A1, currentPower, N);
+                poweredMatrix = exponentiation(A1, N, x);
                 
+                reassignMatrix(&A1, poweredMatrix, N);
+
                 break;
             default:
                 cout << "Введите допустимую команду." << endl;
@@ -156,3 +161,4 @@ int main(int argc, char* argv[]) {
 
 	return 0;
 }
+

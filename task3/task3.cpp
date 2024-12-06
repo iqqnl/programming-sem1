@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cmath>
-
+#include <windows.h>
 using namespace std;
 
 void sortBuble(float* ar, int size) {
@@ -12,7 +12,7 @@ void sortBuble(float* ar, int size) {
 		{
 			if (ar[j] < ar[j - 1])
 			{
-				std::swap(ar[j], ar[j - 1]);
+				swap(ar[j], ar[j - 1]);
 				f = true;
 			}
 		}
@@ -33,7 +33,9 @@ int main(int argc, char* argv[]) {
     if (argc <= 1 || strcmp(argv[1], "false") != 0) {
         isHuman = true;
     }
-
+	
+SetConsoleCP(1251);
+SetConsoleOutputCP(1251);
     setlocale(LC_ALL, "RUS");
 
 	const int SIZE = 30;
