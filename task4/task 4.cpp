@@ -7,9 +7,9 @@ void deleteMatrix(int** array, int numberOfRows) {
     }
 
 	for (int i = 0; i < numberOfRows; i++) {
-		delete array[i];
+		delete[] array[i];
 	}
-	delete array;
+	delete[] array;
 }
 
 int** createMatrix(int numberOfRows, int numberOfColumns) {
