@@ -26,10 +26,10 @@ void printMatrix(int** array, int numberOfRows, int numberOfColums) {
     }
 
 	for (int i = 0; i < numberOfRows; i++)  {
-		for (int j = 0; j < numberOfColums; j++) {
+		for (int j = 0; j < numberOfColums - 1; j++) {
 			cout << array[i][j] << " ";
 		}
-		cout << endl;
+		cout << array[i][numberOfColums - 1] << endl;
 	}
 }
 
