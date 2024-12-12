@@ -1,0 +1,350 @@
+#include <iostream>
+#include <time.h>
+#include <windows.h>
+#include <fstream>
+#include <string>
+
+// Функция вывода матрицы на экран консоли
+void ShowMatrix(int** matrix, int orderMatrix)
+{
+	for (int i{}; i < orderMatrix; ++i)
+	{
+		for (int j{}; j < orderMatrix; ++j)
+		{
+			std::cout << matrix[i][j] << '\t';
+		}
+		std::cout << std::endl;
+	}
+}
+
+// Функция, заполняющая двумерный массив нулями
+void FillingMatrixWithZeros(int** matrix, int orderMatrix)
+{
+	for (int i{}; i < orderMatrix; ++i)
+	{
+		for (int j{}; j < orderMatrix; ++j)
+		{
+			matrix[i][j] = 0;
+		}
+	}
+}
+
+// Функция для зполнения матрицы с клавиатуры
+void FillMatrix(int** matrix, int orderMatrix)
+{
+	for (int i{ 0 }; i < orderMatrix; i++)
+	{
+		for (int j{ 0 }; j < orderMatrix; j++)
+		{
+			std::cout << "Введите " << i + 1 << " строку " << j + 1 << " столбец: ";
+			std::cin >> matrix[i][j];
+		}
+	}
+}
+
+// Функция замены элемента в матрице
+void ReplaceElement(int** matrix, int orderMatrix)
+{
+	int row{}, colomn{}, meaning{};
+	std::cout << "Введите строку, в которой нужно изменить элемент: ";
+	std::cin >> row;
+	std::cout << "Введите столбец, в котором нужно изменить элемент: ";
+	std::cin >> colomn;
+	// Проверка на корректный ввод строки и столбца
+	if (row - 1 > orderMatrix || colomn - 1 > orderMatrix)
+	{
+		std::cout << "Вы ввели некорректные данные" << std::endl;
+		return;
+	}
+	std::cout << "Введите значение, на которое будет изменен элемент: ";
+	std::cin >> meaning;
+	matrix[row - 1][colomn - 1] = meaning;
+}
+
+// Функция для заполнения матрицы C минимальными элементами из столбцов матрицы A
+void FillMatrixCWithColumnMins(int** matrixA, int** matrixC, int orderMatrix)
+{
+	FillingMatrixWithZeros(matrixC, orderMatrix); // Инициализируем матрицу C нулями
+
+	for (int j = 0; j < orderMatrix; ++j)
+	{
+		int minElement = matrixA[0][j];
+		int minRow = 0;
+
+		// Поиск минимального элемента в текущем столбце
+		for (int i = 1; i < orderMatrix; ++i)
+		{
+			if (matrixA[i][j] < minElement)
+			{
+				minElement = matrixA[i][j];
+				minRow = i;
+			}
+		}
+		// Перенос минимального элемента в матрицу C
+		matrixC[minRow][j] = minElement;
+	}
+}
+
+// Функция для сравнивания матриц по их соответствущим элементам
+bool isMatrixEqual(int** matrixA, int** matrixB, int orderMatrix)
+{
+	for (int i{}; i < orderMatrix; ++i)
+	{
+		for (int j{}; j < orderMatrix; ++j)
+		{
+			// Проверка соответствующих элементов на их равенство
+			if (matrixA[i][j] != matrixB[i][j]) return false;
+		}
+	}
+	return true;
+}
+
+// Заполнение двумерного массива из файла
+void FillMatrixWithFile(int** matrix, int orderMatrix, std::string& itog)
+{
+	for (int i{}; i < orderMatrix; ++i)
+	{
+		for (int j{}; j < orderMatrix; ++j)
+		{
+			// В матрицу записываем число, которое находится в начале строки stoi
+			matrix[i][j] = stoi(itog);
+			// В lenghtElement записываем, который только что записали
+			std::string lenghtElement = std::to_string(matrix[i][j]);
+			// Удаляем из строки число, которое записали в матрицу
+			itog.erase(0, lenghtElement.size());
+			// Удаляем лишние пробелы в начале строки
+			while (itog[0] == char(32))
+			{
+				itog.erase(0, 1);
+			}
+		}
+	}
+}
+
+// Функция для вывода на экран консоли матрицы с файла
+void WritingToFile(std::ofstream& matrixFile, int** matrix, int orderMatrix)
+{
+	for (int i{}; i < orderMatrix; ++i)
+	{
+		for (int j{}; j < orderMatrix; ++j)
+		{
+			matrixFile << matrix[i][j] << ' ';
+		}
+		matrixFile << std::endl;
+	}
+}
+
+// Удаление двумерного динамического массива
+void DeleteMatrix(int** matrix, int orderMatrix)
+{
+	for (int i{}; i < orderMatrix; ++i)
+	{
+		delete[] matrix[i];
+	}
+	delete[] matrix;
+}
+
+// Вывод меню на экран консоли
+void MenuOutput()
+{
+	std::cout << "Выберите действия для матриц. По умолчанию матрицы заполнены нулями" << std::endl;
+	std::cout << "1 - Консольный ввод матриц" << std::endl;
+	std::cout << "2 - Консольный вывод матриц" << std::endl;
+	std::cout << "3 - Ввод матриц из файла" << std::endl;
+	std::cout << "4 - Вывод матрицы в файл" << std::endl;
+	std::cout << "5 - Редактирование матрицы А" << std::endl;
+	std::cout << "6 - Редактирование матрицы В" << std::endl;
+	std::cout << "7 - Редактирование матрицы С" << std::endl;
+	std::cout << "8 - Заполнить матрицу C минимальными элементами столбцов матрицы A" << std::endl;
+	std::cout << "9 - Выход" << std::endl;
+	std::cout << "Ваш выбор: ";
+}
+
+// Создание двумерного динамического массива
+void CreatingArray(int** matrix, int orderMatrix)
+{
+	for (int i{}; i < orderMatrix; ++i)
+	{
+		matrix[i] = new int[orderMatrix];
+	}
+}
+
+int main()
+{
+	// Локализация консоли
+	setlocale(LC_ALL, "RUS");
+	// Объявление целочисленных переменных, означающих порядки матриц и выбор пользователя 
+	int orderMatrixA{}, orderMatrixB{}, orderMatrixC{}, choice{};
+
+	// Запрашиваем порядки матриц у пользователя
+	std::cout << "Введите порядок для матрицы A: ";
+	std::cin >> orderMatrixA;
+	std::cout << "Введите порядок для матрицы B: ";
+	std::cin >> orderMatrixB;
+	std::cout << "Введите порядок для матрицы C: ";
+	std::cin >> orderMatrixC;
+
+	// Создаём указатель на указатель для создания двумерных массивов
+	int** matrixA = new int* [orderMatrixA];
+	int** matrixB = new int* [orderMatrixB];
+	int** matrixC = new int* [orderMatrixC];
+
+	// Создаем три двумерных динамических массивов, в которых будем хранить наши матрицы
+	CreatingArray(matrixA, orderMatrixA);
+	CreatingArray(matrixB, orderMatrixB);
+	CreatingArray(matrixC, orderMatrixC);
+
+	// Делаем проверку на совместимость порядков матриц А и В с порядком матрицы С
+	// Если порядок матрицы А или матрицы В не совпадает с порядком матрицы С, то 
+	// программа завершает своё действие
+	if (orderMatrixA != orderMatrixC || orderMatrixB != orderMatrixC)
+	{
+		std::cout << "Невозможно переписать матрицу С, те элементы матрицы А,которые являются минимумом в своем столбце";
+		return 0;
+	}
+
+	// Звполняем все массивы нулями для дальнейшей работы
+	FillingMatrixWithZeros(matrixA, orderMatrixA);
+	FillingMatrixWithZeros(matrixB, orderMatrixB);
+	FillingMatrixWithZeros(matrixC, orderMatrixC);
+
+	// Очищаем консоль для красоты
+	system("cls");
+
+	do
+	{
+		// Выводим меню на экран консоли и запрашиваем переменную для дальнейшего пользования
+		MenuOutput();
+		std::cin >> choice;
+
+		switch (choice)
+		{
+			// В case 1 производится построчный ввод всех матриц с клавиатуры
+		case 1:
+		{
+			std::cout << "Введите построчно матрицу А" << std::endl;
+			FillMatrix(matrixA, orderMatrixA);
+			std::cout << "Введите построчно матрицу B" << std::endl;
+			FillMatrix(matrixB, orderMatrixB);
+			std::cout << "Введите построчно матрицу C" << std::endl;
+			FillMatrix(matrixC, orderMatrixC);
+			break;
+		}
+		// В case 2 производится построчный вывод всех матриц на экран консоли
+		case 2:
+		{
+			std::cout << "Консольный вывод матрицы А" << std::endl;
+			ShowMatrix(matrixA, orderMatrixA);
+			std::cout << "Консольный вывод матрицы B" << std::endl;
+			ShowMatrix(matrixB, orderMatrixB);
+			std::cout << "Консольный вывод матрицы C" << std::endl;
+			ShowMatrix(matrixC, orderMatrixC);
+			break;
+		}
+		// В case 3 производится заполнение матриц из файла
+		case 3:
+		{
+			std::ifstream matrixFile;
+			// Открытие файла
+			matrixFile.open("Matrix.txt");
+			// Объявляем строковые переменные 
+			// В них будем записывать промежуточные числа и полученный итог
+			std::string intermediateDigit{}, itog{};
+			// Если файл открыт, то продолжаем
+			if (matrixFile.is_open())
+			{
+				// Читаем файл до конца
+				while (!matrixFile.eof())
+				{
+					// Читаем строку из файла
+					std::getline(matrixFile, intermediateDigit);
+					// Результат записываем в переменную itog
+					itog += intermediateDigit + ' ';
+				}
+				// Заполняем массивы полученными числами
+				FillMatrixWithFile(matrixA, orderMatrixA, itog);
+				FillMatrixWithFile(matrixB, orderMatrixB, itog);
+				FillMatrixWithFile(matrixC, orderMatrixC, itog);
+				// Закрытие файла
+				matrixFile.close();
+			}
+			// Если файл не открылся, то выводим соответствующее сообщение
+			else
+			{
+				std::cout << "Файл не открыт. Работа с ним дальше невозможна";
+			}
+			break;
+		}
+		// В case 4 записываем матрицы в файл
+		case 4:
+		{
+			std::ofstream matrixFile;
+			// Открываем файл
+			matrixFile.open("Matrix.txt");
+			// Делаем проверку на открытие файла
+			if (matrixFile.is_open())
+			{
+				// Поотдельности выводим матрицы на экран консоли
+				WritingToFile(matrixFile, matrixA, orderMatrixA);
+				WritingToFile(matrixFile, matrixB, orderMatrixB);
+				WritingToFile(matrixFile, matrixC, orderMatrixC);
+				// Закрываем файл
+				matrixFile.close();
+			}
+			// Если файл не открылся, то выводим соответсвующее сообщение
+			else
+			{
+				std::cout << "Файл не открыт. Работа с ним дальше невозможна";
+			}
+			break;
+		}
+		// В case 5 меняем кокай-либо элемент в матрице А
+		case 5:
+		{
+			ReplaceElement(matrixA, orderMatrixA);
+			break;
+		}
+		// В case 6 меняем кокай-либо элемент в матрице В
+		case 6:
+		{
+			ReplaceElement(matrixB, orderMatrixB);
+			break;
+		}
+		// В case 7 меняем кокай-либо элемент в матрице С
+		case 7:
+		{
+			ReplaceElement(matrixC, orderMatrixC);
+			break;
+		}
+		// В case 8 определяем является ли матрица С результатом возведения матрица А в квадрат
+		case 8:
+		{
+			FillMatrixCWithColumnMins(matrixA, matrixC, orderMatrixA);
+			std::cout << "Матрица C обновлена минимальными элементами из столбцов матрицы A." << std::endl;
+			break;
+		}
+		// В case 9 выводим сообщение о том, что пользователь завершает программу
+		case 9:
+		{
+			std::cout << "Вы вышли из программы. До свидания!" << std::endl;
+			break;
+		}
+		// В default выводим сообщение о том, что пользователь выбрал неверное значение при выборе
+		default:
+			std::cout << "Вы ввели ошибочное значение, пожалуйста, повторите свой выбор" << std::endl;
+			break;
+		}
+
+		// Задержка программы
+		Sleep(5000);
+		// Очистка консоли
+		system("cls");
+	} while (choice != 9);
+
+	// Удаление динамических массивов, использованных во время программы
+	DeleteMatrix(matrixA, orderMatrixA);
+	DeleteMatrix(matrixB, orderMatrixB);
+	DeleteMatrix(matrixC, orderMatrixC);
+
+	return 0;
+}

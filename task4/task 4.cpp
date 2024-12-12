@@ -20,6 +20,7 @@ int** createMatrix(int numberOfRows, int numberOfColumns) {
     return result;
 }
 
+
 void printMatrix(int** array, int numberOfRows, int numberOfColums) {
     if (array == nullptr) {
         return;
