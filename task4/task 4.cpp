@@ -107,6 +107,8 @@ int main(int argc, char* argv[]) {
     if (argc <= 1 || strcmp(argv[1], "false") != 0) {
     isHuman = true;
 	}
+    
+    setlocale(LC_ALL, "RUS");
 
     int N = readInt(isHuman ? "Введитн N (число строк): " : nullptr);
     int M = readInt(isHuman ? "Введитн M (число столбцов): " : nullptr);

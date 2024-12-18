@@ -1,4 +1,4 @@
-#define ROW_MAX_LENGTH_CHARACTERS 150
+#define ROW_MAX_LENGTH_CHARACTERS 100
 #define GROUP_LENGTH ROW_MAX_LENGTH_CHARACTERS / 5
 #define NAME_LENGTH ROW_MAX_LENGTH_CHARACTERS / 5 * 3
 #define GRADES_LENGTH ROW_MAX_LENGTH_CHARACTERS / 5
@@ -17,7 +17,7 @@ using std::setw;
 
 struct Student {
     string name;
-    int groupNumber;
+    string groupNumber;
     short grades[NUMBER_OF_GRADES]; 
 };
 
@@ -28,7 +28,7 @@ struct Array {
 };
 
 struct AggregatedGroupInfo {
-    int groupNumber;
+    string groupNumber;
     int numberOfStudents;
     int numberOfLowgraders;
 };
@@ -246,12 +246,12 @@ bool isLowgrader(Student* student) {
 
 template <class T>
 void bubbleSort(Array<T> arr, bool (*comparator)(T*, T*)) {
-     for (int i = 1; i < arr.length; i++) {
-        for (int j = 0; j < arr.length - i; j++) {
-            if (comparator(&arr.values[i], &arr.values[j])) {
-                T tmp = arr.values[i];
-                arr.values[i] = arr.values[j];
-                arr.values[j] = tmp;
+     for (int i = 0; i < arr.length - 1; i++) {
+        for (int j = 0; j < arr.length - i - 1; j++) {
+            if (comparator(&arr.values[j], &arr.values[j + 1])) {
+                T tmp = arr.values[j];
+                arr.values[j] = arr.values[j + 1];
+                arr.values[j + 1] = tmp;
             }
         }
     }
