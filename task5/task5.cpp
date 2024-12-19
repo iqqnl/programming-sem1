@@ -61,8 +61,10 @@ int main(int argc, char* argv[])
     {
         isHuman = true;
     }
+    
     SetConsoleCP(1251);
     SetConsoleOutputCP(1251);
+
     int N{}, K{};
     if (isHuman)
         cout << "Введите количество студентов: ";
